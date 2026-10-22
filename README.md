@@ -12,9 +12,7 @@ Run the following command in your terminal:
 ```bash
 curl https://int.gl | sh
 ```
-or `curl int.gl | sh`
-
-To view the code first, just run `curl int.gl`.
+or `curl int.gl | sh`. To view the code first, just run `curl int.gl`.
 
 ## (AI) Secure Pipeshell Validator
 
