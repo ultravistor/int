@@ -7,11 +7,11 @@ A simple tool to check if your installation is affected by [CVE-2026-109618 and 
 Important: This is a version-based check, not a definitive vulnerability test. It may not recognize distro-specific backported security fixes. 
 
 ## Update with confirmation
-Before making changes, it shows the exact commands it will run and asks for confirmation. Only the PHP-related packages are targeted. If you confirm, it updates PHP-related packages through the system package manager (asks for sudo when necessary).
-
-![Warn](docs/2.png)
+Before making changes, it shows the exact commands it will run and asks for confirmation. Only the PHP-related packages are targeted. Upon confirmation, the tool updates PHP-related packages through the system package manager (prompting for sudo if necessary).
 
 Important: Review the commands before proceeding, as package updates may affect running applications and services.
+
+![Warn](docs/2.png)
 
 ## Requirements
 Tested on macOS, APT-based Linux (Debian/Ubuntu), RHEL-based Linux (Rocky/Alma), and Alpine Linux.
