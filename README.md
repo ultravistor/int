@@ -9,8 +9,10 @@ Supposed to work on macOS, APT-based Linux (Debian/Ubuntu), and RPM-based Linux 
 
 ## Usage
 Run the following command in your terminal:  
-`curl https://int.gl | sh`  
-`curl int.gl | sh`
+```bash
+curl https://int.gl | sh
+```
+or `curl int.gl | sh`
 
 To view the code first, just run `curl int.gl`.
 
