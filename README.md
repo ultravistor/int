@@ -1,6 +1,6 @@
 # Environment Checker (for CVE-2026-109618 / CVE-2026-109619)
 
-Helps you find out if you are affected by [CVE-2026-109618 and CVE-2026-109619](https://www.php.net/archive/2026.php#2026-10-21-5). It verifies if your PHP version is patched with the latest releases as of now (PHP 8.5.12, 8.4.27, 8.3.36, or 8.2.35).
+A simple tool to check if you are affected by [CVE-2026-109618 and CVE-2026-109619](https://www.php.net/archive/2026.php#2026-10-21-5). It verifies if your PHP version is patched with the latest releases as of now (PHP 8.5.12, 8.4.27, 8.3.36, or 8.2.35).
 
 This tool is partly derived from use.rw.
 
@@ -8,6 +8,7 @@ This tool is partly derived from use.rw.
 Supposed to work on macOS, APT-based Linux (Debian/Ubuntu), and RPM-based Linux (CentOS/RHEL).
 
 ## Usage
+Run the following command in your terminal:  
 `curl https://int.gl | sh`  
 `curl int.gl | sh`
 
