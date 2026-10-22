@@ -10,7 +10,7 @@ if [ "$DEBUG" = "1" ]; then
     echo "Notice: Script hash verification will be bypassed." >&2 
 fi
 
-EXPECTED_HASH="d1867e0078d157b58b4ea31cc9bf4eb1cd93639f169dfe70b2fb8404b9581a8d"
+EXPECTED_HASH="638179accc1ec31d208ee32aa9336ec9f54b421937468be1ad860d97bf3d62a9"
 
 calc_self_sha256() {
     local target_file="$1"
@@ -92,8 +92,8 @@ msg_apt_update_en="Updating package index (%s)..."
 msg_apt_install_ja="PHP関連パッケージをアップデート中 (%s)..."
 msg_apt_install_en="Upgrading PHP packages strictly (%s)..."
 
-msg_web_done_ja="Apache (%s) を再起動（graceful）しました。"
-msg_web_done_en="Apache (%s) restarted (graceful)."
+msg_web_done_ja="Apache (%s) を再起動しました。"
+msg_web_done_en="Apache (%s) restarted."
 
 msg_macos_fpm_ja="${BOLD}macOS: php-fpm のアップデートが完了しました。${RESET}"
 msg_macos_fpm_en="${BOLD}macOS: php-fpm patch applied (reloaded safely).${RESET}"
@@ -169,24 +169,28 @@ fi
 cmd_web=""
 web_type=""
 
-if [ "$(uname)" = "Darwin" ]; then
+if [ $(uname) = "Darwin" ]; then
     if command -v apachectl >/dev/null 2>&1; then
         web_type="apachectl"
-        if [ -n "$runsudo" ]; then cmd_web="sudo apachectl graceful"; else cmd_web="apachectl graceful"; fi
+        if [ -n "$runsudo" ]; then
+            cmd_web="sudo apachectl stop && sudo apachectl start"
+        else
+            cmd_web="apachectl stop && apachectl start"
+        fi
     fi
 else
     if command -v systemctl >/dev/null 2>&1; then
         if systemctl is-active --quiet apache2 2>/dev/null || command -v apache2 >/dev/null 2>&1; then
-            web_type="systemctl restart apache2";
-            cmd_web="$runsudo systemctl restart apache2";
+            web_type="systemctl restart apache2"
+            cmd_web="$runsudo systemctl restart apache2"
         elif systemctl is-active --quiet httpd 2>/dev/null || command -v httpd >/dev/null 2>&1; then
-            web_type="systemctl restart httpd";
-            cmd_web="$runsudo systemctl restart httpd";
+            web_type="systemctl restart httpd"
+            cmd_web="$runsudo systemctl restart httpd"
         fi
     else
         if command -v apachectl >/dev/null 2>&1; then
-            web_type="apachectl graceful";
-            cmd_web="$runsudo apachectl graceful";
+            web_type="apachectl restart"
+            cmd_web="$runsudo apachectl stop && $runsudo apachectl start"
         fi
     fi
 fi
