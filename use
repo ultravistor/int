@@ -10,7 +10,7 @@ if [ "$DEBUG" = "1" ]; then
     echo "Notice: Script hash verification will be bypassed." >&2 
 fi
 
-EXPECTED_HASH="17d24a6432dbb9bbe31167e35d0f772d0b2ea19179c5f0c62b18ed731f154e84"
+EXPECTED_HASH="d1867e0078d157b58b4ea31cc9bf4eb1cd93639f169dfe70b2fb8404b9581a8d"
 
 calc_self_sha256() {
     local target_file="$1"
