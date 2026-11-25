@@ -10,7 +10,7 @@ if [ "$DEBUG" = "1" ]; then
     echo "Notice: Script hash verification will be bypassed." >&2 
 fi
 
-EXPECTED_HASH="39a77b4f768f2c7a19c604b5d06eadf551c2f4e86b038517df68575a2df339ac"
+EXPECTED_HASH="b2809ff245bdd9c68db4025272017e615ccfc7bf21ddad3f7b95b3cef9a089b1"
 
 calc_self_sha256() {
     local target_file="$1"
@@ -47,6 +47,20 @@ if [ "$CURRENT_HASH" != "$EXPECTED_HASH" ]; then
 fi
 
 # ACTUAL_START
+CVE_IDS="CVE-2026-109618 / CVE-2026-109619"
+DISCLOSURE_DATE_JA="2026年10月21日"
+DISCLOSURE_DATE_EN="Oct 21, 2026"
+
+SAFE_VERSIONS="
+8.5:13
+8.4:28
+8.3:37
+8.2:36
+"
+# EOL versions
+EOL_VERSIONS="8.1 8.0 7. 5."
+# ==========================================
+
 echo ""
 
 BOLD=$(printf '\033[1m')
@@ -62,8 +76,8 @@ else
     IS_JA=0
 fi
 
-msg_start_ja="${BOLD}[INFO] CVE-2026-109618 / CVE-2026-109619 (PHP脆弱性/2026年10月21日) の簡易診断を開始します...${RESET}"
-msg_start_en="${BOLD}[INFO] Starting integrity check for CVE-2026-109618 / CVE-2026-109619 (PHP Vulnerabilities: Oct 21, 2026)...${RESET}"
+msg_start_ja="${BOLD}[INFO] ${CVE_IDS} (PHP脆弱性/${DISCLOSURE_DATE_JA}) の簡易診断を開始します...${RESET}"
+msg_start_en="${BOLD}[INFO] Starting integrity check for ${CVE_IDS} (PHP Vulnerabilities: ${DISCLOSURE_DATE_EN})...${RESET}"
 
 msg_no_php_ja="${CYAN}判定結果: 影響なし (PHP未導入)${RESET}"
 msg_no_php_en="${CYAN}Result: No Impact (PHP is not installed)${RESET}"
@@ -132,19 +146,35 @@ if [ "$IS_JA" -eq 1 ]; then printf "$msg_current_php_ja\n" "$php_ver"; else prin
 # ==========================================
 # 3. バージョン比較判定ロジック
 # ==========================================
+
 curr_major=$(printf "%s" "$php_ver" | cut -d. -f1)
 curr_minor=$(printf "%s" "$php_ver" | cut -d. -f2)
 curr_patch=$(printf "%s" "$php_ver" | cut -d. -f3 | cut -d- -f1)
+curr_mm="${curr_major}.${curr_minor}"
 
 is_vulnerable=0
 
-case "$curr_major.$curr_minor" in
-    8.5) if [ "$curr_patch" -lt 12 ]; then is_vulnerable=1; fi ;;
-    8.4) if [ "$curr_patch" -lt 27 ]; then is_vulnerable=1; fi ;;
-    8.3) if [ "$curr_patch" -lt 36 ]; then is_vulnerable=1; fi ;;
-    8.2) if [ "$curr_patch" -lt 35 ]; then is_vulnerable=1; fi ;;
-    8.1|8.0|7.*|5.*) is_vulnerable=1 ;;
-esac
+# 1. EOL（サポート切れ）チェック
+for eol in $EOL_VERSIONS; do
+    case "$curr_mm" in
+        ${eol}*) is_vulnerable=1; break ;;
+    esac
+done
+
+# 2. 現行バージョンのパッチ番号チェック
+if [ "$is_vulnerable" -eq 0 ]; then
+    for entry in $SAFE_VERSIONS; do
+        target_mm=$(printf "%s" "$entry" | cut -d: -f1)
+        min_safe_patch=$(printf "%s" "$entry" | cut -d: -f2)
+        
+        if [ "$curr_mm" = "$target_mm" ]; then
+            if [ "$curr_patch" -lt "$min_safe_patch" ]; then
+                is_vulnerable=1
+            fi
+            break
+        fi
+    done
+fi
 
 if [ "$is_vulnerable" -eq 1 ]; then
     if [ "$IS_JA" -eq 1 ]; then printf "%s\n\n" "$msg_php_match_ja"; else printf "%s\n\n" "$msg_php_match_en"; fi

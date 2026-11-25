@@ -1,6 +1,6 @@
 # (PHP) Environment checker + update helper 
 
-A simple tool to check if your installation is affected by [CVE-2026-109618 and CVE-2026-109619](https://www.php.net/archive/2026.php#2026-10-21-5), patch/update PHP packages, and restart web/PHP services in one command. It verifies if your PHP version is patched with the latest releases (PHP 8.5.12, 8.4.27, 8.3.36, or 8.2.35).
+A simple tool to patch/update PHP packages and restart in one command. 
 
 ![Safe](docs/1.png)
 
